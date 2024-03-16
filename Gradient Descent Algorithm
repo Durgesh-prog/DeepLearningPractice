@@ -1,0 +1,40 @@
+// Define the function whose minimum we want to find
+function f(x) {
+    return 0.1 * x* x + x -1; // Example function: 0.1x^2 + x - 1
+}
+
+// Define the derivative of the function
+function df(x) {
+    return 0.2 * x + 1; // Derivative of 0.1x^2 + x - 1 is 0.2*x + 1
+}
+
+// Gradient Descent function
+function gradientDescent(initialGuess, learningRate, tolerance, maxIterations) {
+    let x = initialGuess;
+    let iteration = 0;
+    let minimaFound = false;
+
+    console.log(`Initial: X = ${x}`)
+    while (!minimaFound && iteration < maxIterations) {
+        const gradient = df(x); // Compute gradient at current x
+        const deltaX = -learningRate * gradient; // Update using gradient descent formula
+        x += deltaX; // Update x
+
+        // Check if the change in x is below the tolerance
+        if (Math.abs(deltaX) < tolerance) {
+            minimaFound = true;
+        }
+        console.log(`Iteration ${iteration + 1}: Gradient = ${gradient}  Delta = ${deltaX} , X = ${x}`)
+        iteration++;
+    }
+
+    if (minimaFound) {
+        console.log("Minimum found at:", x);
+        console.log("Value at minimum:", f(x));
+    } else {
+        console.log("Did not converge within maximum iterations.");
+    }
+}
+
+// Example usage
+gradientDescent(10, 0.5, 0.0001, 1000); // Initial guess: 5, learning rate: 0.1, tolerance: 0.0001, max iterations: 1000
