@@ -1,0 +1,61 @@
+class Perceptron {
+    constructor(inputSize, learningRate = 1) {
+        // Initialize weights and bias randomly
+        this.weights = new Array(inputSize);
+        for (let i = 0; i < inputSize; i++) {
+            this.weights[i] = Math.random() * 2 - 1; // Random weights between -1 and 1
+        }
+        this.bias = Math.random() * 2 - 1; // Random bias between -1 and 1
+        this.learningRate = learningRate;
+    }
+
+    // Activation function (step function)
+    activate(sum) {
+        return sum > 0 ? 1 : 0; // Step function
+    }
+
+    // Training the perceptron
+    train(inputs, target) {
+        // Compute the weighted sum of inputs
+        let sum = this.bias;
+        for (let i = 0; i < this.weights.length; i++) {
+            sum += inputs[i] * this.weights[i];
+        }
+        
+        // Compute the error
+        let error = target - this.activate(sum);
+        
+        // Update weights and bias
+        for (let i = 0; i < this.weights.length; i++) {
+            this.weights[i] += this.learningRate * error * inputs[i];
+        }
+        this.bias += this.learningRate * error;
+    }
+
+    // Predict function
+    predict(inputs) {
+        // Compute the weighted sum of inputs
+        let sum = this.bias;
+        for (let i = 0; i < this.weights.length; i++) {
+            sum += inputs[i] * this.weights[i];
+        }
+        // Return the predicted output
+        return this.activate(sum);
+    }
+}
+
+// Example:
+const perceptron = new Perceptron(2); // 2-dimensional inputs
+const trainingData = [
+    { input: [0, 0], output: 0 },
+    { input: [0, 1], output:1 },
+    { input: [1, 0], output: 1 },
+    { input: [1, 1], output: 1 }
+];
+
+// Train the perceptron
+for (let i = 0; i < 10; i++) {
+    for (const data of trainingData) {
+        perceptron.train(data.input, data.output);
+    }
+}
