@@ -1,0 +1,32 @@
+import numpy as np
+from scipy.signal import convolve2d
+import matplotlib.pyplot as plt
+from skimage import data
+
+def gaussian_blur(image, kernel_size=5, sigma=1):
+    # Create 2D Gaussian blur kernel
+    kernel = np.fromfunction(lambda x, y: (1/(2*np.pi*sigma**2)) * np.exp(-((x-(kernel_size-1)/2)**2 + (y-(kernel_size-1)/2)**2) / (2*sigma**2)), (kernel_size, kernel_size))
+    kernel /= np.sum(kernel)  # Normalize kernel weights to sum to 1
+
+    # Apply convolution
+    blurred_image = convolve2d(image, kernel, mode='same', boundary='symm')
+
+    return blurred_image
+
+# Load example image
+image = data.camera()
+
+# Apply Gaussian blur
+blurred_image = gaussian_blur(image)
+
+# Display original and blurred images
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+plt.imshow(image, cmap='gray')
+plt.title('Original Image')
+plt.axis('off')
+plt.subplot(1, 2, 2)
+plt.imshow(blurred_image, cmap='gray')
+plt.title('Blurred Image')
+plt.axis('off')
+plt.show()
