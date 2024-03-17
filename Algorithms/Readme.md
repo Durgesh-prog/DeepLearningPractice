@@ -1,1 +1,1 @@
-# Common Algorithsm
+# Common Algorithm
