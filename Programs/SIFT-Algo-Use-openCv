@@ -1,0 +1,33 @@
+import cv2
+import numpy as np
+import torch
+import torchvision.transforms as transforms
+from torchvision import datasets
+from google.colab.patches import cv2_imshow
+
+# Load CIFAR-10 dataset
+transform = transforms.Compose([
+    transforms.Resize((256, 256)),  # Resize the image
+])
+cifar_dataset = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+
+# Get an image from the dataset
+image, _ = cifar_dataset[0]  # Get the first image from the dataset
+image_np = np.array(image)    # Convert PIL image to numpy array
+
+# Convert to grayscale
+gray_image = cv2.cvtColor(image_np, cv2.COLOR_RGB2GRAY)
+
+# Initialize SIFT detector
+sift = cv2.SIFT_create()
+
+# Detect keypoints and compute descriptors
+keypoints, descriptors = sift.detectAndCompute(gray_image, None)
+
+# Draw keypoints on the image
+image_with_keypoints = cv2.drawKeypoints(image_np, keypoints, None, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+# Display the image with keypoints
+cv2_imshow(image_with_keypoints)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
