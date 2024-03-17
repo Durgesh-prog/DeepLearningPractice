@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from skimage import feature, exposure
+import torch
+import torchvision.transforms as transforms
+from torchvision import datasets
+
+# Load CIFAR-10 dataset
+transform = transforms.Compose([
+    transforms.Resize((64, 64)),  # Resize the image
+])
+cifar_dataset = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+
+# Get an image from the dataset
+image, _ = cifar_dataset[0]  # Get the first image from the dataset
+image_np = np.array(image)    # Convert PIL image to numpy array
+
+# Convert to grayscale
+gray_image = np.mean(image_np, axis=2)
+
+# Compute HOG features
+hog_features, hog_image = feature.hog(gray_image, pixels_per_cell=(8, 8),
+                                      cells_per_block=(2, 2), visualize=True)
+
+# Visualize the HOG image
+fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+
+ax[0].imshow(gray_image, cmap='gray')
+ax[0].set_title('Original Grayscale Image')
+ax[0].axis('off')
+
+hog_image_rescaled = exposure.rescale_intensity(hog_image, in_range=(0, 10))
+ax[1].imshow(hog_image_rescaled, cmap='gray')
+ax[1].set_title('HOG Features')
+ax[1].axis('off')
+
+plt.show()
